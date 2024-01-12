@@ -23,7 +23,7 @@ def create_ascii_frame(img, font, ascii_chars, hidden_code, probability=0.05):
 
     return ascii_image
 
-def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden_code, num_frames):
+def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden_codes, num_frames_per_code):
     img = Image.open(image_path)
     aspect_ratio = img.height / img.width
     new_width = grid_width * font_size
@@ -33,17 +33,19 @@ def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden
     ascii_chars = "@%#*+=-:. "  # Darker to lighter
     frames = []
 
-    for _ in range(num_frames):
-        frame = create_ascii_frame(img, font, ascii_chars, hidden_code)
+    for hidden_code in hidden_codes:
+        for _ in range(num_frames_per_code):
+            frame = create_ascii_frame(img, font, ascii_chars, hidden_code)
         frames.append(frame)
+
     return frames
 
-
-# Usage
 image_path = 'svenra.png'
 font_path = 'Industry-Demi.ttf'
-frames = generate_animated_ascii(image_path, 150, font_path, 10, "svenra", 10)  # 10 frames
+hidden_codes = ["svenra", "(create(world"]
+num_frames_per_code = 10 # Number of frames for each hidden code
 
+frames = generate_animated_ascii(image_path, 150, font_path, 10, hidden_codes, num_frames_per_code)
 
-# Save as GIF
-frames[0].save('animated_ascii.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
+frames[0].save('animated_ascii_phased.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
+
