@@ -8,6 +8,40 @@ def map_char_to_intensity(char):
     """
     return sum(ord(c) for c in char) % 256
 
+def get_ascii_char(value, ascii_chars):
+    """
+    Map a grayscale value to an ASCII character.
+    """
+    return ascii_chars[int(value / 256 * len(ascii_chars))]
+
+def image_to_ascii(image_path, grid_size):
+    # Load the image
+    img = Image.open(image_path)
+
+    # Resize the image
+    aspect_ratio = img.height / img.width
+    new_width = grid_size
+    new_height = int(aspect_ratio * new_width * 0.5)
+    img = img.resize((new_width, new_height))
+
+    # Convert image to grayscale
+    img = img.convert("L")
+
+    # ASCII characters ordered by perceived luminance
+    ascii_chars = "@%#*+=-:. "  # Darker to lighter
+
+    # Convert the grayscale image to numpy array
+    pixels = np.array(img)
+
+    # Create ASCII art
+    ascii_art = ''
+    for i in range(pixels.shape[0]):
+        for j in range(pixels.shape[1]):
+            ascii_art += get_ascii_char(pixels[i, j], ascii_chars)
+        ascii_art += '\n'
+
+    return ascii_art
+
 def image_to_ascii_custom(image_path, grid_size, ascii_chars):
     # Load the image
     img = Image.open(image_path)
@@ -42,5 +76,7 @@ def image_to_ascii_custom(image_path, grid_size, ascii_chars):
 image_path = 'svenra.png'  # Replace with your image path
 
 # Convert and print ASCII Art
-ascii_art = image_to_ascii_custom(image_path, 50, "svenra")
+ascii_art = image_to_ascii(image_path, 120)
+# ascii_art2 = image_to_ascii_custom(image_path, 50, "svenra")
+
 print(ascii_art)
