@@ -79,14 +79,16 @@ def image_to_ascii_custom(image_path, grid_size, ascii_chars):
 
     return ascii_art
 
-def image_to_colored_ascii(image_path, grid_size, font_path, font_size):
+def image_to_colored_ascii(image_path, grid_width, font_path, font_size):
     # Load the image
     img = Image.open(image_path)
 
-    # Resize the image
+    # Calculate the new height of the image based on the aspect ratio
     aspect_ratio = img.height / img.width
-    new_width = grid_size
-    new_height = int(aspect_ratio * new_width * 0.5)
+    new_width = grid_width * font_size  # New width in pixels
+    new_height = int(aspect_ratio * new_width)
+
+    # Resize the image
     img = img.resize((new_width, new_height))
 
     # Convert image to grayscale for ASCII mapping
@@ -100,22 +102,24 @@ def image_to_colored_ascii(image_path, grid_size, font_path, font_size):
     font = ImageFont.truetype(font_path, font_size)
 
     # Map each pixel to an ASCII character and color
-    for i in range(img.height):
-        for j in range(img.width):
-            char = get_ascii_char(gray_img.getpixel((j, i)))
-            color = img.getpixel((j, i))
-            draw.text((j * font_size, i * font_size), char, fill=color, font=font)
+    for i in range(0, img.height, font_size):
+        for j in range(0, img.width, font_size):
+            pixel_x, pixel_y = j, i
+            char = get_ascii_char(gray_img.getpixel((pixel_x, pixel_y)))
+            color = img.getpixel((pixel_x, pixel_y))
+            draw.text((j, i), char, fill=color, font=font)
 
     return ascii_image
 
 # Path to the image file
-image_path = 'svenfacecloseup.png'  # Replace with your image path
+image_path = 'svenra.png'  # Replace with your image path
 font_path = 'Industry-Demi.ttf'  # Replace with the path to a TrueType font
+font_size = 10 
 
 # Convert and print ASCII Art
 # ascii_art = image_to_ascii(image_path, 120)
-ascii_art_image = image_to_colored_ascii(image_path, 400, font_path, 6)
-ascii_art_image.save('colored_ascii_art4.png')
+ascii_art_image = image_to_colored_ascii(image_path, 200, font_path, font_size)
+ascii_art_image.save('colored_ascii_art6.png')
 
 # ascii_art2 = image_to_ascii_custom(image_path, 50, "svenra")
 
