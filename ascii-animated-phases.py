@@ -5,9 +5,9 @@ import random
 def get_ascii_char(value, ascii_chars):
     return ascii_chars[int(value / 256 * len(ascii_chars))]
 
-def create_ascii_frame(img, font, ascii_chars, hidden_code, probability=0.05):
+def create_ascii_frame(img, font, ascii_chars, hidden_code, background_color, probability=0.05):
     gray_img = img.convert("L")
-    ascii_image = Image.new("RGB", img.size, color="black")
+    ascii_image = Image.new("RGB", img.size, color=background_color)
     draw = ImageDraw.Draw(ascii_image)
     code_index = 0
 
@@ -23,29 +23,31 @@ def create_ascii_frame(img, font, ascii_chars, hidden_code, probability=0.05):
 
     return ascii_image
 
-def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden_codes, num_frames_per_code):
+
+def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden_codes, num_frames_per_code, background_color):
     img = Image.open(image_path)
     aspect_ratio = img.height / img.width
     new_width = grid_width * font_size
     new_height = int(aspect_ratio * new_width)
     img = img.resize((new_width, new_height))
     font = ImageFont.truetype(font_path, font_size)
-    ascii_chars = "@%#*+=-:. "  # Darker to lighter
+    ascii_chars = ".+*#%@"[::-1]  # Lighter to darker
     frames = []
 
     for hidden_code in hidden_codes:
         for _ in range(num_frames_per_code):
-            frame = create_ascii_frame(img, font, ascii_chars, hidden_code)
-        frames.append(frame)
+            frame = create_ascii_frame(img, font, ascii_chars, hidden_code, background_color)
+            frames.append(frame)
 
     return frames
 
-image_path = 'svenra.png'
+image_path = 'waking_up.JPEG'
 font_path = 'Industry-Demi.ttf'
-hidden_codes = ["svenra", "(create(world"]
+hidden_codes = ["wakeUp", "andLaugh"]
 num_frames_per_code = 10 # Number of frames for each hidden code
+background_color = (255, 255, 255)  # Light background (RGB)
 
-frames = generate_animated_ascii(image_path, 150, font_path, 10, hidden_codes, num_frames_per_code)
+frames = generate_animated_ascii(image_path, 150, font_path, 10, hidden_codes, num_frames_per_code, background_color)
 
-frames[0].save('animated_ascii_phased.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
+frames[0].save('waking_up.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
 
