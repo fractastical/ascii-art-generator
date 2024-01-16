@@ -54,7 +54,8 @@ image_path = 'waking_up.JPEG'
 font_path = 'Industry-Demi.ttf'
 num_frames_per_code = 10 # Number of frames for each hidden code
 background_color = (207, 159, 255)  # Light background (RGB)
+
 frames = generate_animated_ascii(image_path, 150, font_path, 10, hidden_codes, num_frames_per_code, background_color)
 
-frames[0].save('waking_up.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
+frames[0].save('encoded_image.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
 
