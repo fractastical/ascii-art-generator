@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageSequence
 import numpy as np
 import random
 
+
 def get_ascii_char(value, ascii_chars):
     return ascii_chars[int(value / 256 * len(ascii_chars))]
 
@@ -31,7 +32,7 @@ def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden
     new_height = int(aspect_ratio * new_width)
     img = img.resize((new_width, new_height))
     font = ImageFont.truetype(font_path, font_size)
-    ascii_chars = ".+*#%@"[::-1]  # Lighter to darker
+    ascii_chars = ".*#%@"[::-1]  # Lighter to darker
     frames = []
 
     for hidden_code in hidden_codes:
@@ -41,12 +42,18 @@ def generate_animated_ascii(image_path, grid_width, font_path, font_size, hidden
 
     return frames
 
+def read_hidden_codes(file_path):
+    with open(file_path, 'r') as file:
+        return [line.strip() for line in file.readlines()]
+
+# Usage
+hidden_codes_file_path = 'hidden_codes.txt'
+hidden_codes = read_hidden_codes(hidden_codes_file_path)
+
 image_path = 'waking_up.JPEG'
 font_path = 'Industry-Demi.ttf'
-hidden_codes = ["wakeUp", "andLaugh"]
 num_frames_per_code = 10 # Number of frames for each hidden code
-background_color = (255, 255, 255)  # Light background (RGB)
-
+background_color = (207, 159, 255)  # Light background (RGB)
 frames = generate_animated_ascii(image_path, 150, font_path, 10, hidden_codes, num_frames_per_code, background_color)
 
 frames[0].save('waking_up.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
