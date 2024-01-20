@@ -50,16 +50,17 @@ def read_hidden_codes(file_path):
 hidden_codes_file_path = 'hidden_codes.txt'
 hidden_codes = read_hidden_codes(hidden_codes_file_path)
 
-image_path = 'inputs/division.jpeg'
+image_path = 'inputs/echoes.jpeg'
 font_path = 'Industry-Demi.ttf'
-num_frames_per_code = 10 # Number of frames for each hidden code
+num_frames_per_code = 1 # Number of frames for each hidden code
 # background_color = ( 48, 25, 52 )  # dark purple
 # background_color = ( 144, 144, 144 )  # light green
+# background_color = (43, 133, 186)
 
-background_color = (43, 133, 186)
+# background_color = (254, 119, 144)
+background_color = (200, 200, 200)
 
-
-frames = generate_animated_ascii(image_path, 220, font_path, 10, hidden_codes, num_frames_per_code, background_color)
+frames = generate_animated_ascii(image_path, 250, font_path, 10, hidden_codes, num_frames_per_code, background_color)
 
 frames[0].save('encoded_image.gif', save_all=True, append_images=frames[1:], loop=0, duration=100)
 
